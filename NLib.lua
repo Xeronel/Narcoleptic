@@ -70,7 +70,7 @@ function NLib.RestedGained(realm, name)
     if time_diff == 0 then
         return 0;
     else
-        return time_diff/3600;
+        return (time_diff/3600)*0.625;
     end
 end
 
