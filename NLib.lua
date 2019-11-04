@@ -1,25 +1,32 @@
 NLib = {}
 
 function NLib.Initialize()
-    -- Create the data table if it doesn't exist
+    local realm =  GetRealmName();
+    local player = UnitName("player");
+
     if NLibData == nil then
         NLibData = {};
     end
 
-    -- Create a table for the current character if it doesn't exist
-    if NLibData[UnitName("player")] == nil then
-        NLibData[UnitName("player")] = {};
+    if NLibData[realm] == nil then
+        NLibData[realm] = {};
+    end
+
+    if NLibData[realm][player] == nil then
+        NLibData[realm][player] = {};
     end
 end
 
 function NLib.Print()
     NLib.Update()
-    for name, data in pairs(NLibData) do
-        local rested = math.floor(NLib.RestedGained(name) + data["rest_pcnt"])
-        local msg = format("[%s] %s | %s | XP:%s%% | R:%s%% | %s", data["lvl"], name, data["class"], data["xp_pcnt"], rested, data["loc"])
-        DEFAULT_CHAT_FRAME:AddMessage(msg);
-        --SendChatMessage(tostring(msg):gsub("\124", "\124\124"), "party");
-        --print("["..data["lvl"].."] "..name.." <"..data["class"].."> ["..data["xppcnt"].."% R:"..data["restpcnt"].."%] - "..data["loc"], "party");
+    for realm, characters in pairs(NLibData) do
+        DEFAULT_CHAT_FRAME:AddMessage(".: "..realm.." :.");
+        for n, c in pairs(characters) do
+            local rested = math.floor(NLib.RestedGained(realm, n) + c["rest_pcnt"])
+            local msg = format("[%s] %s | %s | XP:%s%% | R:%s%% | %s", c["lvl"], n, c["class"], c["xp_pcnt"], rested, c["loc"])
+            DEFAULT_CHAT_FRAME:AddMessage(msg);
+            --SendChatMessage(tostring(msg):gsub("\124", "\124\124"), "party");
+        end
     end
 end
 
@@ -57,8 +64,8 @@ function NLib.RestedPcnt()
     end
 end
 
-function NLib.RestedGained(name)
-    local time_diff = GetServerTime()-NLibData[name].last_seen;
+function NLib.RestedGained(realm, name)
+    local time_diff = GetServerTime()-NLibData[realm][name].last_seen;
     if time_diff == 0 then
         return 0;
     else
@@ -68,12 +75,14 @@ end
 
 function NLib.Update()
     local name = UnitName("player");
-    NLibData[name]["xp_pcnt"] = NLib.GetXPPcnt();
-    NLibData[name]["rested"] = NLib.GetRested();
-    NLibData[name]["rest_pcnt"] = NLib.RestedPcnt();
-    NLibData[name]["lvl"] = UnitLevel("player");
-    NLibData[name]["class"], _, _ = UnitClass("player");
-    NLibData[name]["last_seen"] = GetServerTime();
-    NLibData[name]["resting"] = IsResting();
-    NLibData[name]["loc"] = GetMinimapZoneText();
+    local realm = GetRealmName();
+    NLib.Initialize()
+    NLibData[realm][name]["xp_pcnt"] = NLib.GetXPPcnt();
+    NLibData[realm][name]["rested"] = NLib.GetRested();
+    NLibData[realm][name]["rest_pcnt"] = NLib.RestedPcnt();
+    NLibData[realm][name]["lvl"] = UnitLevel("player");
+    NLibData[realm][name]["class"], _, _ = UnitClass("player");
+    NLibData[realm][name]["last_seen"] = GetServerTime();
+    NLibData[realm][name]["resting"] = IsResting();
+    NLibData[realm][name]["loc"] = GetMinimapZoneText();
 end
