@@ -6,9 +6,7 @@ Sleepy.f:RegisterEvent("UPDATE_EXHAUSTION");
 Sleepy.f:RegisterEvent("PLAYER_ENTERING_WORLD");
 
 Sleepy.f:SetScript("OnEvent", function(self, event, arg1)
-    -- DEFAULT_CHAT_FRAME:AddMessage("Rested: +"..r.." ("..p.."%)");
     if event == "ADDON_LOADED" and arg1 == "Narcoleptic" then
-        -- Addon loaded, variables are now available
         NLib.Update();
     elseif event == "PLAYER_UPDATE_RESTING" then
         NLib.Update();
