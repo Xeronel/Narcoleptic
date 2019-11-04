@@ -9,7 +9,6 @@ Sleepy.f:SetScript("OnEvent", function(self, event, arg1)
     -- DEFAULT_CHAT_FRAME:AddMessage("Rested: +"..r.." ("..p.."%)");
     if event == "ADDON_LOADED" and arg1 == "Narcoleptic" then
         -- Addon loaded, variables are now available
-        NLib.Initialize();
         NLib.Update();
     elseif event == "PLAYER_UPDATE_RESTING" then
         NLib.Update();
@@ -22,6 +21,7 @@ end)
 
 Sleepy.f:Hide()
 
+-- Slash Commands
 SLASH_RESTED1 = "/rested";
 function SlashCmdList.RESTED(msg)
     NLib.Print();

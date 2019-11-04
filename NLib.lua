@@ -18,12 +18,13 @@ function NLib.Initialize()
 end
 
 function NLib.Print()
+    local msg_fmt = "[%s] %s | %s | XP:%s%% | R:%s%% | %s"
     NLib.Update()
     for realm, characters in pairs(NLibData) do
         DEFAULT_CHAT_FRAME:AddMessage(".: "..realm.." :.");
         for n, c in pairs(characters) do
             local rested = math.floor(NLib.RestedGained(realm, n) + c["rest_pcnt"])
-            local msg = format("[%s] %s | %s | XP:%s%% | R:%s%% | %s", c["lvl"], n, c["class"], c["xp_pcnt"], rested, c["loc"])
+            local msg = format(msg_fmt, c["lvl"], n, c["class"], c["xp_pcnt"], rested, c["loc"])
             DEFAULT_CHAT_FRAME:AddMessage(msg);
             --SendChatMessage(tostring(msg):gsub("\124", "\124\124"), "party");
         end
