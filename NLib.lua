@@ -18,11 +18,16 @@ function NLib.Initialize()
 end
 
 function NLib.Print()
-    local msg_fmt = "[%s] %s | %s | XP:%s%% | R:%s%% | %s"
     NLib.Update()
     for realm, characters in pairs(NLibData) do
         DEFAULT_CHAT_FRAME:AddMessage(".: "..realm.." :.");
         for n, c in pairs(characters) do
+            local msg_fmt
+            if c["resting"] then 
+                msg_fmt = "[%s] %s \124 %s \124 XP:%s%% \124 R:%s%% \124 |cFF76C8FF%s|r"
+            else
+                msg_fmt = "[%s] %s \124 %s \124 XP:%s%% \124 R:%s%% \124 |cFFFF4040%s|r"
+            end
             local rested = math.floor(NLib.RestedGained(realm, n) + c["rest_pcnt"])
             local msg = format(msg_fmt, c["lvl"], n, c["class"], c["xp_pcnt"], rested, c["loc"])
             DEFAULT_CHAT_FRAME:AddMessage(msg);
@@ -31,7 +36,7 @@ function NLib.Print()
     end
 end
 
-function rpad(str, len, char)
+function NLib.rpad(str, len, char)
     if char == nil then char = ' ' end
     return str..string.rep(char, len - #str)
 end
@@ -70,7 +75,11 @@ function NLib.RestedGained(realm, name)
     if time_diff == 0 then
         return 0;
     else
-        return (time_diff/3600)*0.625;
+        if NLibData[realm][name].resting then
+            return (time_diff/3600)*0.625;
+        else
+            return (time_diff/3600)*0.15625;
+        end
     end
 end
 
