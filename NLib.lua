@@ -18,7 +18,7 @@ function NLib.Print()
         local rested = math.floor(NLib.RestedGained(name) + data["rest_pcnt"])
         local msg = format("[%s] %s | %s | XP:%s%% | R:%s%% | %s", data["lvl"], name, data["class"], data["xp_pcnt"], rested, data["loc"])
         DEFAULT_CHAT_FRAME:AddMessage(msg);
-        SendChatMessage(tostring(msg):gsub("\124", "\124\124"), "party");
+        --SendChatMessage(tostring(msg):gsub("\124", "\124\124"), "party");
         --print("["..data["lvl"].."] "..name.." <"..data["class"].."> ["..data["xppcnt"].."% R:"..data["restpcnt"].."%] - "..data["loc"], "party");
     end
 end
