@@ -1,7 +1,7 @@
 ## Interface: 11302
 ## Title: Narcoleptic
 ## Notes: Rested XP tracker
-## Version: 1.1
+## Version: 1.2
 ## SavedVariables: NLibData
 NLib.lua
 Narcoleptic.lua

@@ -97,8 +97,8 @@ function NLib.GetXPMax()
 end
 
 function NLib.GetXPPcnt()
-    local xp = UnitXP("player");
-    local xpmax = NLib.GetXPMax();
+    local xp = UnitXP("player")
+    local xpmax = NLib.GetXPMax()
 
     if xp == 0 or xpmax == 0 then
         return 0;
@@ -108,38 +108,61 @@ function NLib.GetXPPcnt()
 end
 
 function NLib.RestedPcnt()
-    local rested = NLib.GetRested();
-    local max_xp = NLib.GetXPMax();
+    local rested = NLib.GetRested()
+    local max_xp = NLib.GetXPMax()
     if max_xp ~= 0 and rested ~= 0 then
-        return (NLib.GetRested()/NLib.GetXPMax())*100;
+        return (NLib.GetRested()/NLib.GetXPMax())*100
     else
-        return 0;
+        return 0
     end
 end
 
 function NLib.RestedGained(realm, name)
-    local time_diff = GetServerTime()-NLibData[realm][name].last_seen;
+    local time_diff = GetServerTime()-NLibData[realm][name].last_seen
+    local one_hour = 3600
+    local resting_rate = 0.625
+    local normal_rate = 0.15625
+
     if time_diff == 0 then
         return 0;
     else
+        -- 3600 = 1 hour in seconds
         if NLibData[realm][name].resting then
-            return (time_diff/3600)*0.625;
+            return (time_diff/one_hour)*0.625
         else
-            return (time_diff/3600)*0.15625;
+            return (time_diff/one_hour)*0.15625
         end
     end
 end
 
+function NLib.GetZone()
+    local realm = GetRealmName()
+    local name = UnitName("player")
+    local zone = GetZoneText()
+    local subZone = GetSubZoneText()
+    local prevZone = NLibData[realm][name]["loc"]
+
+    if subZone ~= "" and subZone ~= nil then
+        return subZone
+    elseif zone ~= "" and zone ~= nil then
+        return zone
+    elseif prevZone ~= "" and prevZone ~= nil then
+        return prevZone
+    else
+        return ""
+    end
+end
+
 function NLib.Update()
-    local name = UnitName("player");
-    local realm = GetRealmName();
+    local name = UnitName("player")
+    local realm = GetRealmName()
     NLib.Initialize()
-    NLibData[realm][name]["xp_pcnt"] = NLib.GetXPPcnt();
-    NLibData[realm][name]["rested"] = NLib.GetRested();
-    NLibData[realm][name]["rest_pcnt"] = NLib.RestedPcnt();
-    NLibData[realm][name]["lvl"] = UnitLevel("player");
-    NLibData[realm][name]["class"], _, _ = UnitClass("player");
-    NLibData[realm][name]["last_seen"] = GetServerTime();
-    NLibData[realm][name]["resting"] = IsResting();
-    NLibData[realm][name]["loc"] = GetMinimapZoneText();
+    NLibData[realm][name]["xp_pcnt"] = NLib.GetXPPcnt()
+    NLibData[realm][name]["rested"] = NLib.GetRested()
+    NLibData[realm][name]["rest_pcnt"] = NLib.RestedPcnt()
+    NLibData[realm][name]["lvl"] = UnitLevel("player")
+    NLibData[realm][name]["class"], _, _ = UnitClass("player")
+    NLibData[realm][name]["last_seen"] = GetServerTime()
+    NLibData[realm][name]["resting"] = IsResting()
+    NLibData[realm][name]["loc"] = NLib.GetZone()
 end
