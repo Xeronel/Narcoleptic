@@ -1,5 +1,21 @@
 NLib = {}
 
+NLib.ClassColors = {
+    ["Hunter"] = "|cFFAAD372",
+    ["Mage"] = "|cFF3FC6EA",
+    ["Warlock"] = "|cFF8787ED",
+    ["Paladin"] = "|cFFF48CBA",
+    ["Druid"] = "|cFFFF7C0A",
+    ["Priest"] = "|cFFFFFFFF",
+    ["Rogue"] = "|cFFFFF468",
+    ["Warrior"] = "|cFFC69B6D"
+}
+
+NLib.RestColors = {
+    [true] = "|cFF76C8FF",
+    [false] = "|cFFFF4040"
+}
+
 function NLib.Initialize()
     local realm =  GetRealmName();
     local player = UnitName("player");
@@ -20,25 +36,47 @@ end
 function NLib.Print()
     NLib.Update()
     for realm, characters in pairs(NLibData) do
+        -- Sort characters by length of name
+        local sortedKeys = {}
+        for k in pairs(characters) do table.insert(sortedKeys, k) end
+        table.sort(sortedKeys, NLib.Sort)
+        
         DEFAULT_CHAT_FRAME:AddMessage(".: "..realm.." :.");
-        for n, c in pairs(characters) do
-            local msg_fmt
-            if c["resting"] then 
-                msg_fmt = "[%s] %s \124 %s \124 XP:%s%% \124 R:%s%% \124 |cFF76C8FF%s|r"
-            else
-                msg_fmt = "[%s] %s \124 %s \124 XP:%s%% \124 R:%s%% \124 |cFFFF4040%s|r"
-            end
-            local rested = math.floor(NLib.RestedGained(realm, n) + c["rest_pcnt"])
-            local msg = format(msg_fmt, c["lvl"], n, c["class"], c["xp_pcnt"], rested, c["loc"])
+        for _, n in ipairs(sortedKeys) do
+            local c = characters[n];
+            local div = " | ";
+            local lvl = "["..string.rpad(tostring(c.lvl), 2, "  ").."]";
+            local name = NLib.ClassColor(c.class, n);
+            local xp_pcnt = "XP: "..c.xp_pcnt.."%";
+            local rested = "R: "..math.floor(NLib.RestedGained(realm, n) + c["rest_pcnt"]).."%"
+            local location = NLib.RestColor(c.resting, c.loc);
+            local msg = lvl.." "..name..div..xp_pcnt..div..rested..div..location
             DEFAULT_CHAT_FRAME:AddMessage(msg);
             --SendChatMessage(tostring(msg):gsub("\124", "\124\124"), "party");
         end
     end
 end
 
-function NLib.rpad(str, len, char)
+function NLib.Sort(a, b)
+    return string.len(a) < string.len(b)
+end
+
+string.rpad = function(str, len, char)
     if char == nil then char = ' ' end
-    return str..string.rep(char, len - #str)
+    return string.rep(char, len - #str) .. str
+end
+
+string.lpad = function(str, len, char)
+    if char == nil then char = ' ' end
+    return str .. string.rep(char, len - #str)
+end
+
+function NLib.ClassColor(class, str)
+    return NLib.ClassColors[class]..format("%s|r", str);
+end
+
+function NLib.RestColor(resting, str)
+    return NLib.RestColors[resting]..format("%s|r", str);
 end
 
 function NLib.GetRested()
