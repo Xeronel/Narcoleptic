@@ -22,5 +22,5 @@ Sleepy.f:Hide()
 -- Slash Commands
 SLASH_RESTED1 = "/rested";
 function SlashCmdList.RESTED(msg)
-    NLib.Print();
+    NLib.Print(msg);
 end

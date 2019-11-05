@@ -33,7 +33,7 @@ function NLib.Initialize()
     end
 end
 
-function NLib.Print()
+function NLib.Print(channel)
     NLib.Update()
     for realm, characters in pairs(NLibData) do
         -- Sort characters by length of name
@@ -42,17 +42,26 @@ function NLib.Print()
         table.sort(sortedKeys, NLib.Sort)
         
         DEFAULT_CHAT_FRAME:AddMessage(".: "..realm.." :.");
-        for _, n in ipairs(sortedKeys) do
-            local c = characters[n];
-            local div = " | ";
+        for _, name in ipairs(sortedKeys) do
+            local c = characters[name];
+            local div = " | "
             local lvl = "["..string.rpad(tostring(c.lvl), 2, "  ").."]";
-            local name = NLib.ClassColor(c.class, n);
             local xp_pcnt = "XP: "..c.xp_pcnt.."%";
-            local rested = "R: "..math.floor(NLib.RestedGained(realm, n) + c["rest_pcnt"]).."%"
-            local location = NLib.RestColor(c.resting, c.loc);
+            local rested = "R: "..math.floor(NLib.RestedGained(realm, name) + c["rest_pcnt"]).."%"
+            local location = c.loc;
+
+            -- Add colors if not sent via chat
+            if channel == "" then
+                name = NLib.ClassColor(c.class, name);
+                location = NLib.RestColor(c.resting, location);
+            end
+
             local msg = lvl.." "..name..div..xp_pcnt..div..rested..div..location
-            DEFAULT_CHAT_FRAME:AddMessage(msg);
-            --SendChatMessage(tostring(msg):gsub("\124", "\124\124"), "party");
+            if channel == "" then
+                DEFAULT_CHAT_FRAME:AddMessage(msg);
+            else
+                SendChatMessage(tostring(msg):gsub("\124", "\124\124"), channel);
+            end
         end
     end
 end
