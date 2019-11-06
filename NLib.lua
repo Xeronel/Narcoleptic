@@ -41,7 +41,12 @@ function NLib.Print(channel)
         for k in pairs(characters) do table.insert(sortedKeys, k) end
         table.sort(sortedKeys, NLib.Sort)
         
-        DEFAULT_CHAT_FRAME:AddMessage(".: "..realm.." :.");
+        if channel == "" then
+            DEFAULT_CHAT_FRAME:AddMessage(".: "..realm.." :.");
+        else
+            SendChatMessage(".: "..realm.." :.", channel);
+        end
+
         for _, name in ipairs(sortedKeys) do
             local c = characters[name];
             local div = " | "
