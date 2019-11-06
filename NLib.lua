@@ -41,10 +41,10 @@ function NLib.Print(channel)
         for k in pairs(characters) do table.insert(sortedKeys, k) end
         table.sort(sortedKeys, NLib.Sort)
         
-        if channel == "" then
-            DEFAULT_CHAT_FRAME:AddMessage(".: "..realm.." :.");
-        else
+        if channel == "say" or channel == "party" then
             SendChatMessage(".: "..realm.." :.", channel);
+        else
+            DEFAULT_CHAT_FRAME:AddMessage(".: "..realm.." :.");
         end
 
         for _, name in ipairs(sortedKeys) do
@@ -56,16 +56,16 @@ function NLib.Print(channel)
             local location = c.loc;
 
             -- Add colors if not sent via chat
-            if channel == "" then
+            if channel ~= "say" and channel ~= "party" then
                 name = NLib.ClassColor(c.class, name);
                 location = NLib.RestColor(c.resting, location);
             end
 
             local msg = lvl.." "..name..div..xp_pcnt..div..rested..div..location
-            if channel == "" then
-                DEFAULT_CHAT_FRAME:AddMessage(msg);
-            else
+            if channel == "say" or channel == "party" then
                 SendChatMessage(tostring(msg):gsub("\124", "\124\124"), channel);
+            else
+                DEFAULT_CHAT_FRAME:AddMessage(msg);
             end
         end
     end
