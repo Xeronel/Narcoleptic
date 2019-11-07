@@ -52,7 +52,7 @@ function NLib.Print(channel)
             local div = " | "
             local lvl = "["..string.rpad(tostring(c.lvl), 2, "  ").."]";
             local xp_pcnt = "XP: "..c.xp_pcnt.."%";
-            local rested = "R: "..math.floor(NLib.RestedGained(realm, name) + c["rest_pcnt"]).."%"
+            local rested = "R: "..NLib.CalcRested(realm, name).."%"
             local location = c.loc;
 
             -- Add colors if not sent via chat
@@ -119,6 +119,18 @@ function NLib.RestedPcnt()
         return (NLib.GetRested()/NLib.GetXPMax())*100
     else
         return 0
+    end
+end
+
+function NLib.CalcRested(realm, name)
+    local rested = NLibData[realm][name].rest_pcnt
+    local rest_gained = NLib.RestedGained(realm, name)
+    local total_rested = math.floor(rested + rest_gained)
+
+    if total_rested >= 150 then
+        return 150
+    else
+        return total_rested
     end
 end
 
