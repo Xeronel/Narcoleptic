@@ -5,6 +5,7 @@ NLib.ClassColors = {
     ["Mage"] = "|cFF3FC6EA",
     ["Warlock"] = "|cFF8787ED",
     ["Paladin"] = "|cFFF48CBA",
+    ["Shaman"] = "|cFF0070DE",
     ["Druid"] = "|cFFFF7C0A",
     ["Priest"] = "|cFFFFFFFF",
     ["Rogue"] = "|cFFFFF468",
