@@ -15,6 +15,7 @@ Sleepy.f:SetScript("OnEvent", function(self, event, arg1)
         NLib.Update()
     elseif event == "UPDATE_EXHAUSTION" then
         NLib.Update()
+        NLibLDB.Update()
     elseif event == "PLAYER_ENTERING_WORLD" then
         NLib.Update()
     elseif event == "ZONE_CHANGED" then

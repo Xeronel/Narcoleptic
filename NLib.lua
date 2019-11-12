@@ -77,6 +77,7 @@ function NLib.Sort(a, b)
 end
 
 string.rpad = function(str, len, char)
+    str = tostring(str)
     if char == nil then char = ' ' end
     return string.rep(char, len - #str) .. str
 end
