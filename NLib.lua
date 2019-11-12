@@ -51,7 +51,7 @@ function NLib.Print(channel)
         for _, name in ipairs(sortedKeys) do
             local c = characters[name];
             local div = " | "
-            local lvl = "["..string.rpad(tostring(c.lvl), 2, "  ").."]";
+            local lvl = "["..string.rpad(c.lvl, 2, "  ").."]";
             local xp_pcnt = "XP: "..c.xp_pcnt.."%";
             local rested = "R: "..NLib.CalcRested(realm, name).."%"
             local location = c.loc;
